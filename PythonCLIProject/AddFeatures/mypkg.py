@@ -28,41 +28,41 @@ def save_cache(installed):
 def install(package, installed, verbose=False, dry_run=False):
     if package in installed:
         if verbose:
-            print(f"✅ {package}=={installed[package]} is already installed.")
+            print(f"{package}=={installed[package]} is already installed.")
         return
 
     if package not in REGISTRY:
-        print(f"❌ Error: Package '{package}' not found in registry.")
+        print(f"Error: Package '{package}' not found in registry.")
         return
 
     for dep in REGISTRY[package]["deps"]:
         install(dep, installed, verbose, dry_run)
 
     if verbose:
-        print(f"📦 Installing {package}=={REGISTRY[package]['version']}...")
+        print(f"Installing {package}=={REGISTRY[package]['version']}...")
 
     time.sleep(0.5)
     if not dry_run:
         installed[package] = REGISTRY[package]["version"]
 
-    print(f"✅ {package}=={REGISTRY[package]['version']} installed successfully!")
+    print(f"{package}=={REGISTRY[package]['version']} installed successfully!")
 
 def uninstall(package, installed, verbose=False):
     if package not in installed:
-        print(f"⚠️ {package} is not installed.")
+        print(f"{package} is not installed.")
         return
 
     dependents = [pkg for pkg, meta in REGISTRY.items() if package in meta["deps"] and pkg in installed]
     if dependents:
-        print(f"❌ Cannot uninstall {package} — required by: {', '.join(dependents)}")
+        print(f"Cannot uninstall {package} — required by: {', '.join(dependents)}")
         return
 
     if verbose:
-        print(f"🗑️ Uninstalling {package}...")
+        print(f"Uninstalling {package}...")
 
     time.sleep(0.5)
     del installed[package]
-    print(f"✅ {package} uninstalled successfully!")
+    print(f"{package} uninstalled successfully!")
 
 def main():
     parser = argparse.ArgumentParser(description="Simulated Package Manager CLI (like apt or mvn)")
